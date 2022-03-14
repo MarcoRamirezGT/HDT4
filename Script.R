@@ -1,5 +1,43 @@
-
 library(ModelMetrics)
+
+
+porcentaje<-0.7
+set.seed(123)
+
+#Calculo de percentiles
+data<-read.csv('train.csv')
+percentil <- quantile(data$SalePrice)
+
+
+#Percentiles
+estado<-c('Estado')
+data$Estado<-estado
+
+
+#Economica=0
+#Intermedia=1
+#Cara=2
+data <- within(data, Estado[SalePrice<=129975] <- 0)
+
+data$Estado[(data$SalePrice>129975 & data$SalePrice<=163000)] <- 1
+data$Estado[data$SalePrice>163000] <- 2
+
+
+#Regresion
+corte <- sample(nrow(data),nrow(data)*porcentaje)
+train<-data[corte,]
+test<-data[-corte,]
+
+
+#Regresion lineal
+fitLMPW<-lm(SalePrice~ ., data = train[,c("GrLivArea","YearBuilt","BsmtUnfSF","TotalBsmtSF","GarageArea","YearRemodAdd", "SalePrice","LotArea")])
+
+predL<-predict(fitLMPW, newdata = test)
+
+
+#Verificando la predicci?n
+resultados<-data.frame(test$SalePrice,predL)
+head(resultados, n=5)
 
 
 
