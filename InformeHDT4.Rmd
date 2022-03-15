@@ -7,15 +7,20 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ModelMetrics)
+library(ggplot2)
 ```
 
 # Modelos de Regresión Lineal
 
-```{r include= FALSE}
-library(ModelMetrics)
+### Elabore  un  modelo  de  regresión  lineal  utilizando  el  conjunto  de  entrenamiento  que  hizo para  predecir  los  precios  de  las  casas.  Explique los resultados  a los que llega. Muestre  el modelo gráficamente. El experimento debe ser reproducible por lo que debe fijar que los conjuntos de entrenamiento y prueba sean los mismos siempre que se ejecute el código.
+
+```{r include= TRUE}
 
 
+#Definimos el porcentaje de datos de prueba
 porcentaje<-0.7
+#Ya que lo que deseamos es que el experimento sea repetible asignamos una semilla
 set.seed(123)
 
 #Calculo de percentiles
@@ -39,6 +44,7 @@ data$Estado[data$SalePrice>163000] <- 2
 
 #Regresion
 corte <- sample(nrow(data),nrow(data)*porcentaje)
+#Creamos nuestros datos de prueba y entrenamiento
 train<-data[corte,]
 test<-data[-corte,]
 
@@ -52,9 +58,13 @@ predL<-predict(fitLMPW, newdata = test)
 #Verificando la predicci?n
 resultados<-data.frame(test$SalePrice,predL)
 pregunta2<-head(resultados, n=5)
+grafica1<-ggplot(data=train,mapping = aes(x=SalePrice,y=GrLivArea ))+
+  geom_point(color='red',size=2)+
+  geom_smooth(method = 'lm',se=TRUE,color='black')+
+  labs(title = 'Precio de venta ~ Pies cuadrados de vivienda',x="Precio de venta",y='Pies cuadrados de venta')+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5))
 ```
 
-### Elabore  un  modelo  de  regresión  lineal  utilizando  el  conjunto  de  entrenamiento  que  hizo para  predecir  los  precios  de  las  casas.  Explique los resultados  a los que llega. Muestre  el modelo gráficamente. El experimento debe ser reproducible por lo que debe fijar que los conjuntos de entrenamiento y prueba sean los mismos siempre que se ejecute el código.
 
 ```{r }
 pregunta2
@@ -81,48 +91,139 @@ pairs(data$SalePrice ~ data$GrLivArea)
 
 ```
 
-Con este gráfico se puede decir que la variable GrLivArea es la mejor que se puede utilizar porque tiene una mejor regresión lineal con la variable SalePrice. Indicando que aporta al modelo.
+Con este gráfico se puede decir que la variable GrLivArea es la mejor que se puede utilizar porque tiene una correlacion de **`r cor(data$SalePrice,data$GrLivArea)`** siendo muy cercana a 1.
 
 ```{r }
 pairs(data$SalePrice ~ data$YearBuilt)
 
 ```
 
-Ahora con la variable YearBuilt se ve que no hay mucha correlación, sin embargo aporta significativamente al modelo.
+Ahora con la variable YearBuilt se ve que no hay mucha correlación (`r cor(data$SalePrice,data$YearBuilt)`), sin embargo aporta significativamente al modelo.
 
 ```{r }
 pairs(data$SalePrice ~ data$BsmtUnfSF)
 
 ```
 
-Respecto a la variable BsmtUnfSF, se observa que hay una gran parte de datos que tienen correlación, por lo que la regresión lineal es buena. Y también aporta al modelo.
+Respecto a la variable BsmtUnfSF, se observa que no posee una buena correlacion, teniendo una correlacion de `r cor(data$SalePrice,data$BsmtUnfSF)`.
 
 ```{r }
 pairs(data$SalePrice ~ data$TotalBsmtSF)
 
 ```
 
-La correlación de la variable TotalBsmtSF es similar a la anterior, tienen regresión lineal aceptable, por lo tanto también aporta al modelo.
+La correlación de la variable TotalBsmtSF tiene una correlacion de `r cor(data$SalePrice,data$TotalBsmtSF)` siendo mejor que la anterior, ya que nuevamente esta muy cercana a 1. 
 
 ```{r }
 pairs(data$SalePrice ~ data$GarageArea)
 
 ```
 
-La variable GarageArea también es útil porque tiene correlación con SalePrice y su regresión lineal es buena. Y al igual que las demás, aporta al modelo.
+La variable GarageArea también es útil porque tiene una correlación `r cor(data$SalePrice,data$GarageArea)`
 
 ```{r }
 pairs(data$SalePrice ~ data$YearRemodAdd)
 
 ```
 
-Con respecto a la variable YearRemodAdd, la correlación con SalePrice no es mucha, la regresión lineal es aceptable y si aporta significativamente al modelo.
+Con respecto a la variable YearRemodAdd, la correlación es de `r cor(data$SalePrice, data$YearRemodAdd)`, indicando que puede llegar a ser util, ya que posee una correlacion mayor a 0.5.
 
 ```{r }
 pairs(data$SalePrice ~ data$LotArea)
 
 ```
 
-La variable LotArea tiene correlación y regresión lineal aceptable, por lo que aporta y es útil de cierta forma para el modelo.
+La variable LotArea tiene una correlación de `r cor(data$SalePrice , data$LotArea)` demostrando que esta no es una buena variable para la regresion lineal.\n
 
-Por último, se concluye que no hay overfitting porque no hay regresión lineal igual a 1, entonces el modelo es bueno.
+
+```{r }
+ggplot(data=train,mapping = aes(x=SalePrice,y=GrLivArea ))+
+  geom_point(color='red',size=2)+
+  geom_smooth(method = 'lm',se=TRUE,color='black')+
+  labs(title = 'Precio de venta ~ Pies cuadrados de vivienda',x="Precio de venta",y='Pies cuadrados de venta')+
+  theme_bw()+theme(plot.title = element_text(hjust = 0.5))
+```
+\n 
+
+
+\n \n 
+\n
+Como se observa en la grafica, mediante la variable con mayor correlacion, en este caso es la variable, GrLivArea. Logramos obtener el modelo lineal, el cual la linea es la que nos minizima el error medio cuadrado. Ademas, como se observa en la grafica, se observa que muchos datos no se encuentran sobre la linea, indicando que no existe overfitting, ya que para que ello exista, se tendria todos los puntos sobre la linea, lo cual como se observa no tenemos. 
+
+
+### Determine la calidad del modelo realizando un análisis de los residuos.
+
+Los residuales se calculan restando del valor de y ajustado del valor de y. 
+Usando una ecuacion podemos predecir el precio de la venta de las casas para el conjunto de pruebas. 
+
+```{r include=FALSE}
+predL<-predict(fitLMPW, newdata = test)
+
+
+```
+
+```{r}
+summary(predL)
+summary(test$SalePrice)
+
+```
+\n Como se observa mediante el summary de ambas variables, tanto en la variable que predijo y la variable del testeo, se demuestra que obtuvimos una buena prediccion, ya que segun el resumen, tenemos varios datos similares, tal como se observa en el promedio.
+Ahora veamos esto graficamente.
+
+```{r}
+plot(fitLMPW)
+
+```
+
+En la grafica **Residuals vs Fitte**, se muestra los residuos estandarizados contra el modelo lineal, y tal como se observa, no se posee algun patron de datos demostrando que son aleatorios. 
+
+En la grafica **Normal Q-Q** logramos observar que los datos son normales, cabe mencionar que se posee algunos datos atipicos, sin embargo, la mayoria son normales. 
+
+En la grafica **Scale-Location** vemos que los datos siguen siendo normales y cercanos a la linea, ademas de no observar algun patron. 
+
+Y nuevamente en la grafica **Residuals vs Leverage**, no se presenta patron alguno.
+
+
+```{r}
+boxplot(fitLMPW$residuals)
+
+```
+\n 
+
+
+\n
+\n
+Como se observa en la grafica , la caja no se encuentra centrada ademas de contar con muchos datos atipicos, por ello es necesario modificar el modelo. Eliminando varios datos atipicos.
+
+
+
+```{r include=FALSE }
+replace_outliers <- function(x, removeNA = TRUE){
+  qrts <- quantile(x, probs = c(0.25, 0.75), na.rm = removeNA)
+  caps <- quantile(x, probs = c(.05, .95), na.rm = removeNA)
+  iqr <- qrts[2]-qrts[1]
+  h <- 1.5 * iqr
+  x[x<qrts[1]-h] <- caps[1]
+  x[x>qrts[2]+h] <- caps[2]
+  x
+}
+
+fitLMPW2 <- replace_outliers(fitLMPW$residuals)
+par(mfrow = c(1,2))
+```
+```{r}
+boxplot(fitLMPW2, main = "Sin datos atipicos",col=6)
+hist(fitLMPW2)
+
+```
+
+Tras eliminar los datos atipicos se observa que tenemos una mejor distribucion de los datos, en donde la caja se encuentra centrada y ademas tenemos un histograma con una distribucion normal. \n
+
+```{r}
+plot(test$SalePrice, test$LotArea)
+points(predL, test$LotArea, col="red",pch=15)
+
+```
+
+Como se observa en la grafica anterior podemos ver los puntos predichos, demostrando que tiene una buena prediccion.
+
