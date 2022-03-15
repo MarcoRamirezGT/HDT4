@@ -54,7 +54,7 @@ resultados<-data.frame(test$SalePrice,predL)
 pregunta2<-head(resultados, n=5)
 ```
 
-### 2. Elabore  un  modelo  de  regresión  lineal  utilizando  el  conjunto  de  entrenamiento  que  hizo para  predecir  los  precios  de  las  casas.  Explique los resultados  a los que llega. Muestre  el modelo gráficamente. El experimento debe ser reproducible por lo que debe fijar que los conjuntos de entrenamiento y prueba sean los mismos siempre que se ejecute el código.
+### Elabore  un  modelo  de  regresión  lineal  utilizando  el  conjunto  de  entrenamiento  que  hizo para  predecir  los  precios  de  las  casas.  Explique los resultados  a los que llega. Muestre  el modelo gráficamente. El experimento debe ser reproducible por lo que debe fijar que los conjuntos de entrenamiento y prueba sean los mismos siempre que se ejecute el código.
 
 ```{r }
 pregunta2
@@ -64,7 +64,65 @@ pregunta2
 En la tabla mostrada anteriormente, se observa que la predicción de los precios de las casas no se alejan mucho de los precios verdaderos, por lo que se concluye que las variables seleccionadas para realizar la predicción tiene correlación con el precio de la casa, y por consiguiente el modelo está bien.
 
 ```{r include= FALSE}
+#Multicolinealidad y correlación de las variables del modelo
+pairs(data$SalePrice ~ data$GrLivArea)
+pairs(data$SalePrice ~ data$YearBuilt)
+pairs(data$SalePrice ~ data$BsmtUnfSF)
+pairs(data$SalePrice ~ data$TotalBsmtSF)
+pairs(data$SalePrice ~ data$GarageArea)
+pairs(data$SalePrice ~ data$YearRemodAdd)
+pairs(data$SalePrice ~ data$LotArea)
+```
+
+### Analice el modelo. Determine si hay multicolinealidad en las variables, y cuáles son las que aportan al  modelo, por su  valor de  significación.  Haga  un análisis  de  correlación  de  las variables del modelo y especifique si el modelo se adapta bien a los datos. Explique si hay sobreajuste (overfitting) o no.
+
+```{r }
+pairs(data$SalePrice ~ data$GrLivArea)
 
 ```
 
-### 3. Analice el modelo. Determine si hay multicolinealidad en las variables, y cuáles son las que aportan al  modelo, por su  valor de  significación.  Haga  un análisis  de  correlación  de  las variables del modelo y especifique si el modelo se adapta bien a los datos. Explique si hay sobreajuste (overfitting) o no.
+Con este gráfico se puede decir que la variable GrLivArea es la mejor que se puede utilizar porque tiene una mejor regresión lineal con la variable SalePrice. Indicando que aporta al modelo.
+
+```{r }
+pairs(data$SalePrice ~ data$YearBuilt)
+
+```
+
+Ahora con la variable YearBuilt se ve que no hay mucha correlación, sin embargo aporta significativamente al modelo.
+
+```{r }
+pairs(data$SalePrice ~ data$BsmtUnfSF)
+
+```
+
+Respecto a la variable BsmtUnfSF, se observa que hay una gran parte de datos que tienen correlación, por lo que la regresión lineal es buena. Y también aporta al modelo.
+
+```{r }
+pairs(data$SalePrice ~ data$TotalBsmtSF)
+
+```
+
+La correlación de la variable TotalBsmtSF es similar a la anterior, tienen regresión lineal aceptable, por lo tanto también aporta al modelo.
+
+```{r }
+pairs(data$SalePrice ~ data$GarageArea)
+
+```
+
+La variable GarageArea también es útil porque tiene correlación con SalePrice y su regresión lineal es buena. Y al igual que las demás, aporta al modelo.
+
+```{r }
+pairs(data$SalePrice ~ data$YearRemodAdd)
+
+```
+
+Con respecto a la variable YearRemodAdd, la correlación con SalePrice no es mucha, la regresión lineal es aceptable y si aporta significativamente al modelo.
+
+```{r }
+pairs(data$SalePrice ~ data$LotArea)
+
+```
+
+La variable LotArea tiene correlación y regresión lineal aceptable, por lo que aporta y es útil de cierta forma para el modelo.
+
+Por último, se concluye que no hay overfitting porque no hay regresión lineal igual a 1, entonces el modelo es bueno.

@@ -29,15 +29,25 @@ train<-data[corte,]
 test<-data[-corte,]
 
 
+#Verificando la predicci?n
+resultados<-data.frame(test$SalePrice,predL)
+head(resultados, n=5)
+
+
+#Multicolinealidad y correlación de las variables del modelo
+pairs(data$SalePrice ~ data$GrLivArea)
+pairs(data$SalePrice ~ data$YearBuilt)
+pairs(data$SalePrice ~ data$BsmtUnfSF)
+pairs(data$SalePrice ~ data$TotalBsmtSF)
+pairs(data$SalePrice ~ data$GarageArea)
+pairs(data$SalePrice ~ data$YearRemodAdd)
+pairs(data$SalePrice ~ data$LotArea)
+
+
 #Regresion lineal
 fitLMPW<-lm(SalePrice~ ., data = train[,c("GrLivArea","YearBuilt","BsmtUnfSF","TotalBsmtSF","GarageArea","YearRemodAdd", "SalePrice","LotArea")])
 
 predL<-predict(fitLMPW, newdata = test)
-
-
-#Verificando la predicci?n
-resultados<-data.frame(test$SalePrice,predL)
-head(resultados, n=5)
 
 
 
