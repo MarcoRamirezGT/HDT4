@@ -1,0 +1,70 @@
+---
+title: "Informe Hoja de Trabajo 4"
+author: "Marco Ramirez 19588, Alfredo Quezada 191002, Estuardo Hernandez 19202"
+date: "14/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Modelos de Regresión Lineal
+
+```{r include= FALSE}
+library(ModelMetrics)
+
+
+porcentaje<-0.7
+set.seed(123)
+
+#Calculo de percentiles
+data<-read.csv('train.csv')
+percentil <- quantile(data$SalePrice)
+
+
+#Percentiles
+estado<-c('Estado')
+data$Estado<-estado
+
+
+#Economica=0
+#Intermedia=1
+#Cara=2
+data <- within(data, Estado[SalePrice<=129975] <- 0)
+
+data$Estado[(data$SalePrice>129975 & data$SalePrice<=163000)] <- 1
+data$Estado[data$SalePrice>163000] <- 2
+
+
+#Regresion
+corte <- sample(nrow(data),nrow(data)*porcentaje)
+train<-data[corte,]
+test<-data[-corte,]
+
+
+#Regresion lineal
+fitLMPW<-lm(SalePrice~ ., data = train[,c("GrLivArea","YearBuilt","BsmtUnfSF","TotalBsmtSF","GarageArea","YearRemodAdd", "SalePrice","LotArea")])
+
+predL<-predict(fitLMPW, newdata = test)
+
+
+#Verificando la predicci?n
+resultados<-data.frame(test$SalePrice,predL)
+pregunta2<-head(resultados, n=5)
+```
+
+### 2. Elabore  un  modelo  de  regresión  lineal  utilizando  el  conjunto  de  entrenamiento  que  hizo para  predecir  los  precios  de  las  casas.  Explique los resultados  a los que llega. Muestre  el modelo gráficamente. El experimento debe ser reproducible por lo que debe fijar que los conjuntos de entrenamiento y prueba sean los mismos siempre que se ejecute el código.
+
+```{r }
+pregunta2
+
+```
+
+En la tabla mostrada anteriormente, se observa que la predicción de los precios de las casas no se alejan mucho de los precios verdaderos, por lo que se concluye que las variables seleccionadas para realizar la predicción tiene correlación con el precio de la casa, y por consiguiente el modelo está bien.
+
+```{r include= FALSE}
+
+```
+
+### 3. Analice el modelo. Determine si hay multicolinealidad en las variables, y cuáles son las que aportan al  modelo, por su  valor de  significación.  Haga  un análisis  de  correlación  de  las variables del modelo y especifique si el modelo se adapta bien a los datos. Explique si hay sobreajuste (overfitting) o no.

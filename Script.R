@@ -95,4 +95,3 @@ test$prediccion <- predicted
 
 cfm<-confusionMatrix(test$SalePrice,test$prediccion)
 cfm
-
