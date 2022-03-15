@@ -227,3 +227,51 @@ points(predL, test$LotArea, col="red",pch=15)
 
 Como se observa en la grafica anterior podemos ver los puntos predichos, demostrando que tiene una buena prediccion.
 
+### Efectividad y desempeño del modelo:
+
+Realmente si hacemos un analisis desde el comienzo del modelo, podemos comprobar que el modelo tuvo una gran efectividad, si bien es cierto que tomamos variables muy especificas, el modelo tuvo no un desempeño perfecto, pero si algo notable y si vemos la grafica anterior: 
+
+```{r visible=FALSE}
+plot(test$SalePrice, test$LotArea)
+points(predL, test$LotArea, col="red",pch=15)
+
+```
+
+Los puntos que se encuentran en rojo son todos los datos que logras precedir, y los puntos "normales" son los puntos reales, como podemos ver, son pocos los puntos que muestran una variacion muy amplia, en si podriamos decir que los puntos mas variados son puntos atipicos, pero, eso si, cabe destacar que toda la estimacion se hace en base a LotArea y si nos regresamos a la tabla siguiente: 
+
+
+```{r include==FALSE }
+pregunta2
+
+```
+
+Podemos observar que contamos con, como mayor distancia 100,000 en cada dato, por lo que, para ser una estimacion no esta absolutamente nada mal, si podemos mencionar algo, es que muy probablemente, si queremos una estimacion mucha mas aceptada, o por lo menos acortar la distancia entre datos, lo mas seguro es que lo lograriamos agregando muchas mas varibales (variables numericas) posiblemente podriamos tener un acierto mucho mayor, aunque tambien podria influir en que pueden haber muchos datos repetidos. Pero, siendo realistas, posiblemente si se pudieran realizar mas modelos, o crear desde cero una comparativa directa de cada metodo, seria una forma mucho mas facil y correcta de poder determinar los fallos, o bien tener un mejor acierto.
+
+### Comparacion con el arbol de regresion:
+
+Si recordamos el arbol de regresion de la hoja pasada: 
+```{r include=FALSE}
+
+library(rpart)
+library(rpart.plot)
+library(randomForest)
+
+
+data<-read.csv('train.csv') 
+df<-data[,c("LotFrontage","LotArea","GrLivArea","YearBuilt","BsmtUnfSF","TotalBsmtSF","X1stFlrSF","GarageYrBlt","GarageArea","YearRemodAdd", "SalePrice")]
+
+m1<-rpart(SalePrice ~ ., data = df, method = "anova")
+
+```
+```{r include=TRUE}
+rpart.plot(m1, type = 3, digits = 3, fallen.leaves = TRUE )
+
+```
+
+Si comparamos ambos metodos y tomando en cuenta el tiepo trabajado en ambas, se podria de decir que el metodo de regresion lineal es mucho mas rapido de hacer, pero quizas para tener mayor acierto o mejor efectividad es ligeramente mejor el arbol de regresion, ya que con el metodo de regresion lineal tuvimos un acierto del 0.7, mientras que en nuestro analisis de la hoja de trabajo anterior, obtuvimos un acierto de 0.8, tampoco es una diferencia muy abismal pero si es una mejora, por lo que si lo ponemos en terminos simples: 
+
+
+  1. Cual es mejor para predecir: Arbol de regresion. 
+  
+  
+  2. Cual se demoro mas en procesar: Regresion lineal.
