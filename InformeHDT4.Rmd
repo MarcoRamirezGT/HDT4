@@ -250,7 +250,7 @@ Podemos observar que contamos con, como mayor distancia 100,000 en cada dato, po
 Si nos basamos en el coeficiente de correlacion de Spearman: 
 
 ```{r}
-cor(data$SalePrice,data$GrLivArea)
+cor(data$SalePrice,data[,c("GrLivArea","YearBuilt","BsmtUnfSF","TotalBsmtSF","GarageArea","YearRemodAdd","LotArea")], method = "spearman")
 ```
 
 Como podemos ver, nuestro dato es de 0.708, que podemos obtener de eso, como bien sabemos el correlativo de Spearman mide la fuerza y la direccion nde la asociacion entre dos variables para determinar justamente la correlacion de ambas, en este caso nosotros decimos que la relacion entre el precio de la casa debe de ser correlativo a el LivArea, pero, para poder expresar mejor esta diferncia, veamos los siguientes ejemplos: 
@@ -258,14 +258,14 @@ Como podemos ver, nuestro dato es de 0.708, que podemos obtener de eso, como bie
 1. Si utilizamos el año en la que fue construida: 
 
 ```{r}
-cor(data$SalePrice,data$YearBuilt)
+cor(data$SalePrice,data$YearBuilt, method = "spearman")
 ```
 
 Como podemos ver, esta correlacion esta muy justa y si lo vemos asi, esta peor que la relacion que tenemos seleccionada, asi mismo podemos intentar hacer la correlacion con otra variable, como por ejemplo: 
 
 
 ```{r}
-cor(data$SalePrice,data$GarageArea)
+cor(data$SalePrice,data$GarageArea, method = "spearman")
 ```
 
 Como podemos ver, en este caso la correlacion es mayor, pero aun asi no supera la correlacion inicial. 

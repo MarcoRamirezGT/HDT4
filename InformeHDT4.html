@@ -306,17 +306,20 @@ points(predL, test$LotArea, col=&quot;red&quot;,pch=15)</code></pre>
 ## 15         157000 143342.6</code></pre>
 <p>Podemos observar que contamos con, como mayor distancia 100,000 en cada dato, por lo que, para ser una estimacion no esta absolutamente nada mal, si podemos mencionar algo, es que muy probablemente, si queremos una estimacion mucha mas aceptada, o por lo menos acortar la distancia entre datos, lo mas seguro es que lo lograriamos agregando muchas mas varibales (variables numericas) posiblemente podriamos tener un acierto mucho mayor, aunque tambien podria influir en que pueden haber muchos datos repetidos. Pero, siendo realistas, posiblemente si se pudieran realizar mas modelos, o crear desde cero una comparativa directa de cada metodo, seria una forma mucho mas facil y correcta de poder determinar los fallos, o bien tener un mejor acierto.</p>
 <p>Si nos basamos en el coeficiente de correlacion de Spearman:</p>
-<pre class="r"><code>cor(data$SalePrice,data$GrLivArea)</code></pre>
-<pre><code>## [1] 0.7086245</code></pre>
+<pre class="r"><code>cor(data$SalePrice,data[,c(&quot;GrLivArea&quot;,&quot;YearBuilt&quot;,&quot;BsmtUnfSF&quot;,&quot;TotalBsmtSF&quot;,&quot;GarageArea&quot;,&quot;YearRemodAdd&quot;,&quot;LotArea&quot;)], method = &quot;spearman&quot;)</code></pre>
+<pre><code>##      GrLivArea YearBuilt BsmtUnfSF TotalBsmtSF GarageArea YearRemodAdd
+## [1,] 0.7313096 0.6526815 0.1851966   0.6027254  0.6493785     0.571159
+##        LotArea
+## [1,] 0.4564606</code></pre>
 <p>Como podemos ver, nuestro dato es de 0.708, que podemos obtener de eso, como bien sabemos el correlativo de Spearman mide la fuerza y la direccion nde la asociacion entre dos variables para determinar justamente la correlacion de ambas, en este caso nosotros decimos que la relacion entre el precio de la casa debe de ser correlativo a el LivArea, pero, para poder expresar mejor esta diferncia, veamos los siguientes ejemplos:</p>
 <ol style="list-style-type: decimal">
 <li>Si utilizamos el año en la que fue construida:</li>
 </ol>
-<pre class="r"><code>cor(data$SalePrice,data$YearBuilt)</code></pre>
-<pre><code>## [1] 0.5228973</code></pre>
+<pre class="r"><code>cor(data$SalePrice,data$YearBuilt, method = &quot;spearman&quot;)</code></pre>
+<pre><code>## [1] 0.6526815</code></pre>
 <p>Como podemos ver, esta correlacion esta muy justa y si lo vemos asi, esta peor que la relacion que tenemos seleccionada, asi mismo podemos intentar hacer la correlacion con otra variable, como por ejemplo:</p>
-<pre class="r"><code>cor(data$SalePrice,data$GarageArea)</code></pre>
-<pre><code>## [1] 0.6234314</code></pre>
+<pre class="r"><code>cor(data$SalePrice,data$GarageArea, method = &quot;spearman&quot;)</code></pre>
+<pre><code>## [1] 0.6493785</code></pre>
 <p>Como podemos ver, en este caso la correlacion es mayor, pero aun asi no supera la correlacion inicial.</p>
 </div>
 <div id="comparacion-con-el-arbol-de-regresion" class="section level3">
